@@ -1,4 +1,4 @@
-package me.xiaofud.viewpagerdemo;
+package me.xiaofud.viewpagerdemo.activities;
 
 /**
  * Created by smallfly on 16-3-5.

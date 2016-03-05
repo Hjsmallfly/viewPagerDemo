@@ -1,4 +1,4 @@
-package me.xiaofud.viewpagerdemo;
+package me.xiaofud.viewpagerdemo.activities;
 
 //https://www.bignerdranch.com/blog/viewpager-without-fragments/
 
@@ -9,26 +9,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.EditText;
+import android.widget.Toast;
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+import helpers.DownloadTask;
+import interfaces.FileDownloadedHandle;
+import me.xiaofud.viewpagerdemo.R;
+
+public class MainActivity extends AppCompatActivity implements FileDownloadedHandle {
+
+    //----------views------------
 
     private ViewPager viewPager;
+    private EditText picture_url_edit;
+    private Button auto_scroll_button;
+    private Button download_button;
+
+    //----------views------------
+
     private CustomPagerAdapter adapter;
     private UIHandler uiHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setup_views();
+    }
+
+    private void setup_views(){
         viewPager = (ViewPager) findViewById(R.id.viewpager);
+        picture_url_edit = (EditText) findViewById(R.id.picture_url);
         adapter = new CustomPagerAdapter(this);
         viewPager.setAdapter(adapter);
         uiHandler = new UIHandler(viewPager);
-        Button button = (Button) findViewById(R.id.swipe);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        auto_scroll_button = (Button) findViewById(R.id.auto_scroll_button);
+
+        auto_scroll_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Timer timer = new Timer("ui", true);
@@ -51,6 +73,28 @@ public class MainActivity extends AppCompatActivity {
 //                period	long: amount of time in milliseconds between subsequent executions.
             }
         });
+
+        download_button = (Button) findViewById(R.id.download_button);
+        download_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String img_url = picture_url_edit.getText().toString();
+                int index = img_url.lastIndexOf("/");
+                String filename = img_url.substring(index);
+                DownloadTask downloadTask = new DownloadTask(img_url, "download", filename, MainActivity.this, 4000);
+                downloadTask.execute();
+            }
+        });
+
+    }
+
+    @Override
+    public void handle_downloaded_file(File file) {
+        if (file != null){
+            Toast.makeText(MainActivity.this, file.toString(), Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(MainActivity.this, "文件下载失败,请查看日志", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
