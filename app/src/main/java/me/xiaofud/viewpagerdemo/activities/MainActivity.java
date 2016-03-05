@@ -2,23 +2,14 @@ package me.xiaofud.viewpagerdemo.activities;
 
 //https://www.bignerdranch.com/blog/viewpager-without-fragments/
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
@@ -72,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements FileDownloadedHan
                 TimerTask task = new TimerTask() {
                     @Override
                     public void run() {
-                        int count = customPagerAdapter.getCount();
+                        int count = bannerPagerAdapter.getCount();
                         int index = viewPager.getCurrentItem();
                         Message message = new Message();
                         Bundle bundle = new Bundle();
@@ -93,10 +84,19 @@ public class MainActivity extends AppCompatActivity implements FileDownloadedHan
         download_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String img_url = picture_url_edit.getText().toString();
-                int index = img_url.lastIndexOf("/");
-                String filename = img_url.substring(index);
-                DownloadTask downloadTask = new DownloadTask(img_url, "download", filename, MainActivity.this, 4000);
+//                String img_url = picture_url_edit.getText().toString();
+                String[] urls = picture_url_edit.getText().toString().split(";");
+                List<String> url_list = new ArrayList<String>();
+                List<String> filenames = new ArrayList<String>();
+                for(int i = 0 ; i < urls.length ; ++i){
+                    url_list.add(urls[i]);
+                    int index = urls[i].lastIndexOf("/");
+                    String filename = urls[i].substring(index);
+                    filenames.add(filename);
+
+                }
+                DownloadTask downloadTask =
+                        new DownloadTask(url_list, "download", filenames, MainActivity.this, 4000);
                 downloadTask.execute();
             }
         });
@@ -104,33 +104,11 @@ public class MainActivity extends AppCompatActivity implements FileDownloadedHan
     }
 
     @Override
-    public void handle_downloaded_file(File file) {
+    public void handle_downloaded_file(List<File> file) {
         if (file != null){
             if (fileList == null)
                 fileList = new ArrayList<>();
-            fileList.add(file);
-
-            // --------debug---------
-
-//            ImageView imageView = (ImageView) findViewById(R.id.photo);
-//            Bitmap bitmap = BitmapFactory.decodeFile(file.toString());
-////            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-////            Log.d("bannerPagerAdapter", "picture width =" + drawable.getIntrinsicWidth() + " height: " + drawable.getIntrinsicHeight());
-//            DisplayMetrics displaymetrics = new DisplayMetrics();
-//            WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-//            windowManager.getDefaultDisplay().getMetrics(displaymetrics);
-////            int height = displaymetrics.heightPixels;
-//            int width = displaymetrics.widthPixels;
-//
-//            float photo_ratio = (float) bitmap.getWidth() / bitmap.getHeight();
-//            int new_width = width;
-//            int new_height = (int) (width / photo_ratio);
-//
-//            bitmap = Bitmap.createScaledBitmap(bitmap, new_width, new_height, true);
-//
-//            imageView.setImageBitmap(bitmap);
-
-            // --------debug---------
+            fileList.addAll(file);
 
             if (bannerPagerAdapter == null){
                 bannerPagerAdapter = new BannerPagerAdapter(this, fileList);

@@ -1,10 +1,7 @@
 package adapters;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v4.view.PagerAdapter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -35,34 +32,30 @@ public class BannerPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-//        return super.instantiateItem(container, position);
         File banner = banners.get(position);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.view_blue, container, false);
         ImageView imageView = (ImageView) viewGroup.findViewById(R.id.image2);
         Log.d("bannerPagerAdapter", banner.toString());
+
+        // 读取图片文件
         Bitmap bitmap = BitmapFactory.decodeFile(banner.toString());
-//        Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-//        Drawable drawable = Drawable.createFromPath(banner.toString());
-//        Log.d("bannerPagerAdapter", "picture width =" + drawable.getIntrinsicWidth() + " height: " + drawable.getIntrinsicHeight());
         // -----获取屏幕信息------
         DisplayMetrics displaymetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displaymetrics);
 //        int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
         // -----获取屏幕信息------
-
+        // 计算图片原先的比例
         float photo_ratio = (float) bitmap.getWidth() / bitmap.getHeight();
+        // 以屏幕的宽度作为图片的新宽度
         int new_width = width;
+        // 根据比例计算出相应的高度
         int new_height = (int) (width / photo_ratio);
-
+        // 生成新的图片
         bitmap = Bitmap.createScaledBitmap(bitmap, new_width, new_height, true);
-
         imageView.setImageBitmap(bitmap);
-
-
-//        Log.d("bannerPagerAdapter", "screen width = " + width + " height = " + height);
         container.addView(viewGroup);
         return viewGroup;
     }
@@ -75,5 +68,11 @@ public class BannerPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view == object;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+//        super.destroyItem(container, position, object);
+        container.removeView((View) object);
     }
 }

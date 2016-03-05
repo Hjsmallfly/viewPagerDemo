@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by smallfly on 16-3-5.
@@ -23,6 +25,23 @@ import java.net.URL;
 
 public class URLDownloader {
 
+    /**
+     * 只有成功下载的文件会添加到List里面
+     * @param urls
+     * @param directory
+     * @param filenames
+     * @param timeout_ms
+     * @return
+     */
+    public static List<File> download_multiple(List<String> urls, String directory, List<String> filenames, int timeout_ms){
+        ArrayList<File> files = new ArrayList<>();
+        for(int i = 0 ; i < urls.size() ; ++i){
+            File file = download(urls.get(i), directory, filenames.get(i), timeout_ms);
+            if (file != null)
+                files.add(file);
+        }
+        return files;
+    }
 
     public static File download(String url, String directory, String filename, int timeout_ms){
         // 检查sd卡的状态
