@@ -1,4 +1,4 @@
-package me.xiaofud.viewpagerdemo.activities;
+package customviews;
 
 /**
  * Created by smallfly on 16-3-5.
@@ -22,9 +22,14 @@ public class AspectRatioImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = MeasureSpec.getSize(widthMeasureSpec);
+        if (getDrawable() == null){
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            return;
+        }
         int height = width * getDrawable().getIntrinsicHeight() / getDrawable().getIntrinsicWidth();
         setMeasuredDimension(width, height);
     }

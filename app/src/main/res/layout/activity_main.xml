@@ -5,16 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <me.xiaofud.viewpagerdemo.activities.WrapContentHeightViewPager
+    <customviews.WrapContentHeightViewPager
         android:id="@+id/viewpager"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
 
     <EditText
         android:id="@+id/picture_url"
-        android:text="http://musex.cc/source/photo/p3740.mini.jpg"
+        android:inputType="textUri"
+        android:text="http://musex.cc/source/photo/p1604.mini.jpg;http://musex.cc/source/photo/p1430.mini.jpg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -70,6 +70,7 @@ public class URLDownloader {
                 count += bytes_read;
             }
             // 下载完成
+            fos.flush();
             fos.close();
             is.close();
             return file;

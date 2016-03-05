@@ -1,4 +1,4 @@
-package me.xiaofud.viewpagerdemo.activities;
+package adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -7,6 +7,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import me.xiaofud.viewpagerdemo.activities.CustomPagerEnum;
 
 /**
  * Created by smallfly on 16-3-5.
@@ -19,6 +21,7 @@ public class CustomPagerAdapter extends PagerAdapter {
     public CustomPagerAdapter(Context context) {
         mContext = context;
     }
+
 
     @Override
     public Object instantiateItem(ViewGroup collection, final int position) {
